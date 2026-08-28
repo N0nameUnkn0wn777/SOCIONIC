@@ -1,0 +1,26 @@
+:root {
+  --bg: #ffffff;
+  --card: #f7f8fa;
+  --ink: #1a1d23;
+  --muted: #6b7280;
+  --line: #e5e7eb;
+  --accent: #2563eb;
+  --accent-soft: #eff6ff;
+}
+
+body {
+  background: var(--bg);
+  font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+}
+
+h1,
+h2,
+h3 {
+  font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+  font-weight: 700;
+}
+
+.kicker,
+.sec-label {
+  color: var(--accent);
+}

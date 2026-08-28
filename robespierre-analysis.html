@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Робеспьер · Модель А · Анализ социотипа</title>
+<style>
+  :root{
+    --bg:#f7f6f3;
+    --card:#ffffff;
+    --ink:#16181d;
+    --muted:#70737a;
+    --line:#e5e2db;
+    --accent:#1d4ed8;
+    --accent-soft:#e7edf9;
+    --good:#3f6212;
+    --good-soft:#f1f4ea;
+    --bad:#9f1239;
+    --bad-soft:#f9eef1;
+    --radius:14px;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:"Inter","Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;
+    font-size:16px;
+    line-height:1.65;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:900px;margin:0 auto;padding:0 24px}
+
+  header{padding:72px 0 48px;border-bottom:1px solid var(--line)}
+  .kicker{
+    display:inline-block;font-size:12px;font-weight:600;letter-spacing:.18em;
+    text-transform:uppercase;color:var(--accent);margin-bottom:20px;
+  }
+  h1{font-size:clamp(38px,6vw,60px);font-weight:700;letter-spacing:-0.03em;line-height:1.05}
+  .subtitle{margin-top:14px;font-size:19px;color:var(--muted);max-width:640px}
+  .tags{display:flex;flex-wrap:wrap;gap:10px;margin-top:28px}
+  .tag{
+    font-size:13px;font-weight:500;padding:7px 14px;border:1px solid var(--line);
+    border-radius:999px;background:var(--card);color:var(--ink)
+  }
+  .tag b{color:var(--accent);font-weight:600}
+
+  nav{position:sticky;top:0;z-index:10;background:var(--bg);border-bottom:1px solid var(--line)}
+  nav .wrap{display:flex;gap:26px;overflow-x:auto;padding-top:14px;padding-bottom:14px;scrollbar-width:none}
+  nav .wrap::-webkit-scrollbar{display:none}
+  nav a{
+    font-size:13.5px;font-weight:500;color:var(--muted);text-decoration:none;white-space:nowrap;
+    transition:color .15s ease
+  }
+  nav a:hover{color:var(--accent)}
+
+  section{padding:56px 0 8px}
+  .sec-label{font-size:12px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+  h2{font-size:clamp(24px,3.4vw,32px);font-weight:650;letter-spacing:-0.02em;margin-bottom:22px}
+
+  table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;font-size:14.5px}
+  thead th{
+    text-align:left;font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;
+    color:var(--muted);padding:14px 18px;background:#fbfaf8;border-bottom:1px solid var(--line)
+  }
+  tbody td{padding:13px 18px;border-bottom:1px solid var(--line);vertical-align:middle}
+  tbody tr:last-child td{border-bottom:none}
+  .num{font-weight:600;color:var(--muted);font-variant-numeric:tabular-nums;width:44px}
+  .fn-name{font-weight:600;white-space:nowrap}
+  .dim{display:inline-block;font-size:12.5px;font-weight:600;padding:3px 10px;border-radius:999px}
+  .d4{background:var(--ink);color:#fff}
+  .d3{background:#e8e6e0;color:var(--ink)}
+  .d2{background:var(--accent-soft);color:var(--accent)}
+  .d1{background:var(--bad-soft);color:var(--bad)}
+
+  .floor{
+    background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+    padding:30px 32px;margin-top:20px
+  }
+  .floor-head{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:6px}
+  .floor-head h3{font-size:21px;font-weight:650;letter-spacing:-0.01em}
+  .floor-sub{font-size:13px;color:var(--muted)}
+  .floor-desc{font-size:15px;color:#4a4d53;margin:10px 0 24px;max-width:700px}
+
+  .cols{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+  @media(max-width:720px){.cols{grid-template-columns:1fr}}
+  .col h4{
+    font-size:11.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+    margin-bottom:10px;display:flex;align-items:center;gap:8px
+  }
+  .col.plus h4{color:var(--good)}
+  .col.minus h4{color:var(--bad)}
+  .dot{width:7px;height:7px;border-radius:50%;background:currentColor;display:inline-block}
+  .col ul{list-style:none}
+  .col li{font-size:14.5px;padding:6px 0 6px 18px;position:relative;color:#33363c}
+  .col.plus li::before{content:"—";position:absolute;left:0;color:var(--good)}
+  .col.minus li::before{content:"—";position:absolute;left:0;color:var(--bad)}
+  .col li b{color:var(--ink);font-weight:600}
+
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+  @media(max-width:720px){.grid2{grid-template-columns:1fr}}
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:28px 30px}
+  .panel h3{font-size:17px;font-weight:650;margin-bottom:16px;display:flex;align-items:center;gap:10px}
+  .panel.good h3{color:var(--good)}
+  .panel.bad h3{color:var(--bad)}
+  .panel ol{list-style:none;counter-reset:item}
+  .panel ol li{counter-increment:item;font-size:14.5px;padding:9px 0 9px 36px;position:relative;border-top:1px solid var(--line)}
+  .panel ol li:first-child{border-top:none}
+  .panel ol li::before{
+    content:counter(item,decimal-leading-zero);position:absolute;left:0;top:10px;
+    font-size:12px;font-weight:700;color:var(--muted);font-variant-numeric:tabular-nums
+  }
+  .panel ol li b{font-weight:600;color:var(--ink)}
+  .panel.bad ol li::before{color:var(--bad)}
+  .panel.good ol li::before{color:var(--good)}
+
+  .fit-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+  @media(max-width:720px){.fit-grid{grid-template-columns:1fr}}
+  .fit h3{font-size:16px;font-weight:650;margin-bottom:12px}
+  .fit p{font-size:14.5px;color:#3c3f45}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+  .chip{font-size:13px;padding:6px 12px;background:var(--good-soft);color:var(--good);border-radius:999px;font-weight:500}
+  .chip.warn{background:var(--bad-soft);color:var(--bad)}
+  .keys{list-style:none;margin-top:8px}
+  .keys li{font-size:14.5px;padding:10px 0 10px 30px;position:relative;border-top:1px solid var(--line);color:#33363c}
+  .keys li:first-child{border-top:none}
+  .keys li::before{
+    content:"→";position:absolute;left:0;top:9px;color:var(--accent);font-weight:700
+  }
+  .keys li b{color:var(--ink);font-weight:600}
+
+  .final{margin:64px 0 0;padding:44px 40px;background:var(--ink);color:#f4f3f0;border-radius:var(--radius)}
+  .final .sec-label{color:#9a9da4}
+  .final blockquote{font-size:clamp(19px,2.6vw,25px);font-weight:550;line-height:1.45;letter-spacing:-0.01em;max-width:780px}
+  .final blockquote em{color:#9db8ef;font-style:normal}
+
+  footer{margin-top:56px;padding:28px 0 64px;border-top:1px solid var(--line);font-size:13px;color:var(--muted)}
+  footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
+</style>
+  <link rel="stylesheet" href="tims-theme.css">
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <span class="kicker">Соционика · Модель А</span>
+    <h1>РОБЕСПЬЕР</h1>
+    <p class="subtitle">Логико-интуитивный интроверт. Полный разбор сильных и слабых сторон социотипа по всем восьми функциям Модели А.</p>
+    <div class="tags">
+      <span class="tag"><b>ЛИИ</b> · INTj</span>
+      <span class="tag">псевдоним — <b>«Аналитик»</b></span>
+      <span class="tag">Квадра <b>Альфа</b></span>
+      <span class="tag">интроверт · логик · интуит · <b>рационал</b></span>
+      <span class="tag">Дуал — <b>Гюго (ESE)</b></span>
+      <span class="tag">Эго: <b>ТЛ + ЧИ</b></span>
+    </div>
+  </div>
+</header>
+
+<nav>
+  <div class="wrap">
+    <a href="#model">Модель</a>
+    <a href="#ego">Эго</a>
+    <a href="#superego">Супер-Эго</a>
+    <a href="#superid">Супер-Ид</a>
+    <a href="#id">Ид</a>
+    <a href="#summary">Портрет</a>
+    <a href="#fit">Применение</a>
+  </div>
+</nav>
+
+<section id="model">
+  <div class="wrap">
+    <div class="sec-label">Раскладка функций</div>
+    <h2>Модель А Робеспьера</h2>
+    <table>
+      <thead>
+        <tr><th>№</th><th>Функция</th><th>Аспект</th><th>Мерность</th><th>Кольцо</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="num">1</td><td class="fn-name">Базовая</td><td>ТЛ — структурная логика</td><td><span class="dim d4">4D</span></td><td>ментальное</td></tr>
+        <tr><td class="num">2</td><td class="fn-name">Творческая</td><td>ЧИ — интуиция возможностей</td><td><span class="dim d3">3D</span></td><td>ментальное</td></tr>
+        <tr><td class="num">3</td><td class="fn-name">Ролевая</td><td>БЭ — этика отношений</td><td><span class="dim d2">2D</span></td><td>ментальное</td></tr>
+        <tr><td class="num">4</td><td class="fn-name">Болевая</td><td>ЧС — волевая сенсорика</td><td><span class="dim d1">1D</span></td><td>ментальное</td></tr>
+        <tr><td class="num">5</td><td class="fn-name">Суггестивная</td><td>ЧЭ — этика эмоций</td><td><span class="dim d1">1D</span></td><td>витальное</td></tr>
+        <tr><td class="num">6</td><td class="fn-name">Активационная</td><td>БС — сенсорика ощущений</td><td><span class="dim d2">2D</span></td><td>витальное</td></tr>
+        <tr><td class="num">7</td><td class="fn-name">Ограничительная</td><td>ЧЛ — деловая логика</td><td><span class="dim d3">3D</span></td><td>витальное</td></tr>
+        <tr><td class="num">8</td><td class="fn-name">Фоновая</td><td>БИ — интуиция времени</td><td><span class="dim d4">4D</span></td><td>витальное</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section id="ego">
+  <div class="wrap">
+    <div class="sec-label">Этаж 1 · Зона силы</div>
+    <h2>Блок «ЭГО»</h2>
+
+    <div class="floor">
+      <div class="floor-head"><h3>1-я базовая — ТЛ, структурная логика</h3><span class="dim d4">4D</span></div>
+      <div class="floor-sub">опыт + нормы + ситуация + время · «встроенный фильтр реальности»</div>
+      <p class="floor-desc">Высшее мастерство: живёт в мире систем и закономерностей. Он не думает о структуре — он видит её сразу, целиком.</p>
+      <div class="cols">
+        <div class="col plus">
+          <h4><span class="dot"></span>Сильные стороны</h4>
+          <ul>
+            <li><b>Глубочайшая системность мышления:</b> классификации, определения, модели без единого противоречия</li>
+            <li><b>Интеллектуальная честность:</b> не примет ни одного непроверенного допущения</li>
+            <li><b>Зона абсолютной уверенности</b> в вопросах «истинно / ложно», «логично / противоречиво»</li>
+            <li><b>Объективность:</b> отделяет факты от мнений лучше всех вокруг</li>
+            <li><b>Ясность:</b> запутанную ситуацию сводит к простой понятной схеме</li>
+          </ul>
+        </div>
+        <div class="col minus">
+          <h4><span class="dot"></span>Теневые стороны</h4>
+          <ul>
+            <li><b>Схоластика:</b> система ради системы, отрыв от реальной пользы</li>
+            <li><b>Категоричность суждений,</b> нетерпимость к «примерно» и «на глазок»</li>
+            <li><b>Долгие раздумья перед действием:</b> пока всё не сведено в систему — не двигается</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="floor">
+      <div class="floor-head"><h3>2-я творческая — ЧИ, интуиция возможностей</h3><span class="dim d3">3D</span></div>
+      <div class="floor-sub">опыт + нормы + ситуация · то, «как он решает задачи» и главный продукт для окружающих</div>
+      <p class="floor-desc">Инструмент обслуживания базовой ТЛ: способом действия Робеспьера является гипотеза — идея, встроенная в строгую рамку.</p>
+      <div class="cols">
+        <div class="col plus">
+          <h4><span class="dot"></span>Сильные стороны</h4>
+          <ul>
+            <li><b>Продуктивные гипотезы:</b> видит варианты развития и скрытые потенциалы — и тут же проверяет их логикой</li>
+            <li><b>Теоретическое воображение:</b> строит модели того, чего ещё никто не описал</li>
+            <li><b>Проникновение в суть нового</b> предмета через внутренние связи и структуру</li>
+            <li><b>Продукт для окружающих:</b> концепции, объяснения, предсказания последствий</li>
+          </ul>
+        </div>
+        <div class="col minus">
+          <h4><span class="dot"></span>Ограничения</h4>
+          <ul>
+            <li><b>Идеи остаются идеями:</b> доведение до практики — не его стихия</li>
+            <li><b>Перебор вариантов без выбора:</b> анализ может длиться бесконечно</li>
+            <li>Скучные, но полезные возможности отбрасывает как «неинтересные»</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="superego">
+  <div class="wrap">
+    <div class="sec-label">Этаж 2 · Костюм и боль</div>
+    <h2>Блок «СУПЕР-ЭГО»</h2>
+
+    <div class="floor">
+      <div class="floor-head"><h3>3-я ролевая — БЭ, этика отношений</h3><span class="dim d2">2D</span></div>
+      <div class="floor-sub">опыт + социальные нормы · «шаг вправо, шаг влево — тупик»</div>
+      <div class="cols" style="margin-top:16px">
+        <div class="col plus">
+          <h4><span class="dot"></span>Что умеет</h4>
+          <ul>
+            <li>Надеть маску воспитанного, деликатного человека</li>
+            <li>Выдержать протокол вежливости: поздороваться, поблагодарить, извиниться</li>
+            <li>Поддержать светскую беседу о людях и отношениях 15–30 минут</li>
+          </ul>
+        </div>
+        <div class="col minus">
+          <h4><span class="dot"></span>Слабости</h4>
+          <ul>
+            <li><b>Маска вежливости сползает быстро,</b> обнажая отстранённость и сухость</li>
+            <li><b>Игра только по нормам:</b> искреннюю теплоту и сочувствие по заказу не выдаст</li>
+            <li>Ожидают большего душевного участия — разочарование обеих сторон</li>
+            <li><b>Сдержанность читают как высокомерие</b> и равнодушие</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="floor">
+      <div class="floor-head pain"><h3 style="color:var(--bad)">4-я болевая — ЧС, волевая сенсорика</h3><span class="dim d1">1D</span></div>
+      <div class="floor-sub">только личный опыт · Ахиллесова пята и главный источник стресса</div>
+      <p class="floor-desc">Слепота к силе: не видит борьбы за влияние, давления и захвата позиций, пока не окажется раздавленным.</p>
+      <div class="cols">
+        <div class="col minus" style="grid-column:1/-1">
+          <h4><span class="dot"></span>Конкретные проявления</h4>
+          <ul>
+            <li><b>Не может ответить на агрессию здесь и сейчас:</b> ступор, молчание, капитуляция или уход</li>
+            <li><b>Проигрывает открытое соперничество</b> за должности, ресурсы, влияние</li>
+            <li><b>Ультиматумы и принуждение</b> («быстро! так надо!») — главный источник стресса</li>
+            <li><b>Гиперкомпенсация:</b> прячется в принципы («я так не поступаю»), копит обиды, отвечает тихим саботажем, тратя море нервов</li>
+            <li>Критика «ты безвольный, тебя нельзя оставить в обороне» бьёт под дых и помнится годами</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="superid">
+  <div class="wrap">
+    <div class="sec-label">Этаж 3 · Внутренний ребёнок</div>
+    <h2>Блок «СУПЕР-ИД»</h2>
+
+    <div class="floor">
+      <div class="floor-head"><h3>5-я суггестивная — ЧЭ, этика эмоций</h3><span class="dim d1">1D</span></div>
+      <div class="floor-sub">«покормите меня» · зона максимального внушения</div>
+      <div class="cols" style="margin-top:16px">
+        <div class="col plus">
+          <h4><span class="dot"></span>Чего жаждет</h4>
+          <ul>
+            <li>Эмоционального тепла, веселья, живого отклика вокруг</li>
+            <li>Чтобы его расшевелили, порадовали, вытащили в люди</li>
+            <li>Человека, который создаст праздник (это даёт дуал Гюго)</li>
+          </ul>
+        </div>
+        <div class="col minus">
+          <h4><span class="dot"></span>Риски</h4>
+          <ul>
+            <li><b>Сам не умеет создать себе настроение:</b> тонет в серости и апатии</li>
+            <li><b>Уязвим для эмоциональных манипуляторов:</b> заражается чужими страстями некритично</li>
+            <li>Годами живёт без радости, потому что «само не приходит»</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="floor">
+      <div class="floor-head"><h3>6-я активационная — БС, сенсорика ощущений</h3><span class="dim d2">2D</span></div>
+      <div class="floor-sub">«подзарядный кабель» · зона искренней радости</div>
+      <div class="cols" style="margin-top:16px">
+        <div class="col plus">
+          <h4><span class="dot"></span>Что заряжает</h4>
+          <ul>
+            <li>Комфорт, вкусная еда, забота о теле и здоровье</li>
+            <li><b>Тот, кто создаст уют и позаботится о его быте — получит благодарного союзника навсегда</b></li>
+            <li>Расцветает, когда кто-то следит за его физическим состоянием вместо него</li>
+          </ul>
+        </div>
+        <div class="col minus">
+          <h4><span class="dot"></span>Особенности</h4>
+          <ul>
+            <li>Сам устраивает быт лишь по нормам (2D): стандартно, без изобретательности</li>
+            <li>В потоке мысли забывает поесть и поспать</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="id">
+  <div class="wrap">
+    <div class="sec-label">Этаж 4 · Автопилот</div>
+    <h2>Блок «ИД»</h2>
+
+    <div class="floor">
+      <div class="floor-head"><h3>7-я ограничительная — ЧЛ, деловая логика</h3><span class="dim d3">3D</span></div>
+      <div class="floor-sub">стоп-кран · защищает базовую функцию</div>
+      <div class="cols" style="margin-top:16px">
+        <div class="col plus">
+          <h4><span class="dot"></span>Как работает</h4>
+          <ul>
+            <li>Отбрасывает суету коротким вопросом: <b>«а зачем?»</b> — если пользы нет, дела не будет</li>
+            <li>Игнорирует погоню за эффективностью ради эффективности</li>
+            <li>Защищает время на размышление от авралов и «горящих» задач</li>
+          </ul>
+        </div>
+        <div class="col minus">
+          <h4><span class="dot"></span>Оборотная сторона</h4>
+          <ul>
+            <li><b>Упускает практические шансы,</b> требующие немедленного действия</li>
+            <li>Репутация человека, «который всё усложняет и ничего не делает»</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="floor">
+      <div class="floor-head"><h3>8-я фоновая — БИ, интуиция времени</h3><span class="dim d4">4D</span></div>
+      <div class="floor-sub">скрытый мастер · самая сильная подсознательная функция</div>
+      <div class="cols" style="margin-top:16px">
+        <div class="col plus" style="grid-column:1/-1">
+          <h4><span class="dot"></span>Что делает молча</h4>
+          <ul>
+            <li><b>Между делом просчитывает ход событий наперёд:</b> чем кончится проект, сделка, знакомство</li>
+            <li>Его тихие предчувствия сбываются, удивляя окружающих точностью</li>
+            <li>Безошибочно чувствует, когда ситуация созрела, а когда ещё рано</li>
+            <li>Избегает рискованных предприятий раньше, чем все увидят опасность</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="summary">
+  <div class="wrap">
+    <div class="sec-label">Итоговый портрет</div>
+    <h2>Сильные и слабые стороны</h2>
+    <div class="grid2">
+      <div class="panel good">
+        <h3><span class="dot"></span>Сильные стороны</h3>
+        <ol>
+          <li><b>Системный ум высшего класса</b> (ТЛ 4D): модели, классификации, безупречная логика</li>
+          <li><b>Интеллектуальная честность:</b> не примет непроверенного утверждения</li>
+          <li><b>Продуктивные гипотезы</b> (ЧИ 3D): видит варианты развития и скрытые связи</li>
+          <li><b>Скрытое предвидение</b> (БИ 4D): молча знает, чем всё кончится</li>
+          <li><b>Объективность:</b> беспристрастен даже к собственным взглядам</li>
+          <li><b>Принципиальность и порядочность</b> в вопросах истины</li>
+          <li><b>Ясность изложения:</b> сложное сводит к простой схеме</li>
+          <li><b>Ненавязчивая надёжность:</b> держит слово, данное делу</li>
+        </ol>
+      </div>
+      <div class="panel bad">
+        <h3><span class="dot"></span>Слабые стороны</h3>
+        <ol>
+          <li><b>Болевая ЧС:</b> беспомощность перед давлением, конкуренцией и агрессией</li>
+          <li><b>Холодность в общении</b> (БЭ 2D): впечатление высокомерия и равнодушия</li>
+          <li><b>Внушаемость чужими эмоциями</b> (ЧЭ 1D): легко заражается настроениями и страстями</li>
+          <li><b>Отрыв от практики:</b> идеи без доведения, «вечный анализ»</li>
+          <li><b>Прокрастинация до полной ясности:</b> не действует в неопределённости</li>
+          <li><b>Игнорирует практическую выгоду</b> (ЧЛ-ограничительная): упускает реальные шансы</li>
+          <li><b>Запуск быта и здоровья:</b> забывает есть, спать, лечиться</li>
+          <li><b>Замкнутость:</b> узкий круг, трудно просить о помощи</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="fit">
+  <div class="wrap">
+    <div class="sec-label">Практический слой</div>
+    <h2>Где раскрывается · Ключи к взаимодействию</h2>
+    <div class="fit-grid">
+      <div class="panel fit">
+        <h3>Раскрывается</h3>
+        <p>Там, где платят за глубину мышления, строгость выводов и качество моделей — а не за напор и продажи.</p>
+        <div class="chips">
+          <span class="chip">наука и исследования</span>
+          <span class="chip">аналитика и методология</span>
+          <span class="chip">IT-архитектура</span>
+          <span class="chip">математика</span>
+          <span class="chip">философия</span>
+          <span class="chip">экспертиза и аудит знаний</span>
+          <span class="chip">редактура сложных текстов</span>
+          <span class="chip">преподавание теории</span>
+        </div>
+      </div>
+      <div class="panel fit">
+        <h3>Ломается</h3>
+        <p>В ролях с силовым менеджментом, публичной эмоциональностью и необходимостью пробивать и продавать.</p>
+        <div class="chips">
+          <span class="chip warn">силовое администрирование</span>
+          <span class="chip warn">публичная эмоциональность</span>
+          <span class="chip warn">продажи и самопрезентация</span>
+          <span class="chip warn">операционная гонка</span>
+        </div>
+      </div>
+    </div>
+    <div class="panel" style="margin-top:20px">
+      <h3 style="color:var(--ink)">Ключи к взаимодействию</h3>
+      <ul class="keys">
+        <li><b>Не бить по болевой ЧС:</b> никакого давления и ультиматумов — аргументы он оценит сам</li>
+        <li><b>Приносить эмоции и тепло</b> — питание суггестивной ЧЭ: веселите, расшевеливайте, зовите в люди</li>
+        <li><b>Позаботиться о быте и теле</b> (6-я БС) — получите тихого преданного союзника</li>
+        <li><b>Идеальная связка — дуальность с Гюго (ESE):</b> тот своей базовой ЧЭ закрывает его суггестивную, а творческой БС — активационную; Робеспьер взамен даёт структуру (суггестивную ТЛ Гюго) и идеи (его активационную ЧИ)</li>
+      </ul>
+    </div>
+
+    <div class="final">
+      <div class="sec-label">Суть одной фразой</div>
+      <blockquote>Архитектор систем, который понимает <em>устройство чего угодно</em>, но пасует перед грубой силой — и нуждается в том, кто скажет ему: <em>«я решу, я прикрою, я приготовлю ужин — а ты просто думай»</em>.</blockquote>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>Социотип «Робеспьер» (ЛИИ) · анализ по Модели А Аушры Аугустинавичюте</span>
+    <span>Мерности функций — Ирина Ермак</span>
+  </div>
+</footer>
+
+</body>
+</html>

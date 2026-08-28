@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Штирлиц · Модель А · Анализ социотипа</title>
+<style>
+  :root{
+    --bg:#f7f6f3;
+    --card:#ffffff;
+    --ink:#16181d;
+    --muted:#70737a;
+    --line:#e5e2db;
+    --accent:#4d7c0f;
+    --accent-soft:#eff5e4;
+    --good:#3f6212;
+    --good-soft:#f1f4ea;
+    --bad:#9f1239;
+    --bad-soft:#f9eef1;
+    --radius:14px;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:"Inter","Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;
+    font-size:16px;
+    line-height:1.65;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:900px;margin:0 auto;padding:0 24px}
+
+  header{padding:72px 0 48px;border-bottom:1px solid var(--line)}
+  .kicker{
+    display:inline-block;font-size:12px;font-weight:600;letter-spacing:.18em;
+    text-transform:uppercase;color:var(--accent);margin-bottom:20px;
+  }
+  h1{font-size:clamp(38px,6vw,60px);font-weight:700;letter-spacing:-0.03em;line-height:1.05}
+  .subtitle{margin-top:14px;font-size:19px;color:var(--muted);max-width:640px}
+  .tags{display:flex;flex-wrap:wrap;gap:10px;margin-top:28px}
+  .tag{
+    font-size:13px;font-weight:500;padding:7px 14px;border:1px solid var(--line);
+    border-radius:999px;background:var(--card);color:var(--ink)
+  }
+  .tag b{color:var(--accent);font-weight:600}
+
+  nav{position:sticky;top:0;z-index:10;background:var(--bg);border-bottom:1px solid var(--line)}
+  nav .wrap{display:flex;gap:26px;overflow-x:auto;padding-top:14px;padding-bottom:14px;scrollbar-width:none}
+  nav .wrap::-webkit-scrollbar{display:none}
+  nav a{
+    font-size:13.5px;font-weight:500;color:var(--muted);text-decoration:none;white-space:nowrap;
+    transition:color .15s ease
+  }
+  nav a:hover{color:var(--accent)}
+
+  section{padding:56px 0 8px}
+  .sec-label{font-size:12px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+  h2{font-size:clamp(24px,3.4vw,32px);font-weight:650;letter-spacing:-0.02em;margin-bottom:22px}
+
+  table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;font-size:14.5px}
+  thead th{
+    text-align:left;font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;
+    color:var(--muted);padding:14px 18px;background:#fbfaf8;border-bottom:1px solid var(--line)
+  }
+  tbody td{padding:13px 18px;border-bottom:1px solid var(--line);vertical-align:middle}
+  tbody tr:last-child td{border-bottom:none}
+  .num{font-weight:600;color:var(--muted);font-variant-numeric:tabular-nums;width:44px}
+  .fn-name{font-weight:600;white-space:nowrap}
+  .dim{display:inline-block;font-size:12.5px;font-weight:600;padding:3px 10px;border-radius:999px}
+  .d4{background:var(--ink);color:#fff}
+  .d3{background:#e8e6e0;color:var(--ink)}
+  .d2{background:var(--accent-soft);color:var(--accent)}
+  .d1{background:var(--bad-soft);color:var(--bad)}
+
+  .floor{
+    background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+    padding:30px 32px;margin-top:20px
+  }
+  .floor-head{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:6px}
+  .floor-head h3{font-size:21px;font-weight:650;letter-spacing:-0.01em}
+  .floor-sub{font-size:13px;color:var(--muted)}
+  .floor-desc{font-size:15px;color:#4a4d53;margin:10px 0 24px;max-width:700px}
+
+  .cols{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+  @media(max-width:720px){.cols{grid-template-columns:1fr}}
+  .col h4{
+    font-size:11.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+    margin-bottom:10px;display:flex;align-items:center;gap:8px
+  }
+  .col.plus h4{color:var(--good)}
+  .col.minus h4{color:var(--bad)}
+  .dot{width:7px;height:7px;border-radius:50%;background:currentColor;display:inline-block}
+  .col ul{list-style:none}
+  .col li{font-size:14.5px;padding:6px 0 6px 18px;position:relative;color:#33363c}
+  .col.plus li::before{content:"—";position:absolute;left:0;color:var(--good)}
+  .col.minus li::before{content:"—";position:absolute;left:0;color:var(--bad)}
+  .col li b{color:var(--ink);font-weight:600}
+
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+  @media(max-width:720px){.grid2{grid-template-columns:1fr}}
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:28px 30px}
+  .panel h3{font-size:17px;font-weight:650;margin-bottom:16px;display:flex;align-items:center;gap:10px}
+  .panel.good h3{color:var(--good)}
+  .panel.bad h3{color:var(--bad)}
+  .panel ol{list-style:none;counter-reset:item}
+  .panel ol li{counter-increment:item;font-size:14.5px;padding:9px 0 9px 36px;position:relative;border-top:1px solid var(--line)}
+  .panel ol li:first-child{border-top:none}
+  .panel ol li::before{
+    content:counter(item,decimal-leading-zero);position:absolute;left:0;top:10px;
+    font-size:12px;font-weight:700;color:var(--muted);font-variant-numeric:tabular-nums
+  }
+  .panel ol li b{font-weight:600;color:var(--ink)}
+  .panel.bad ol li::before{color:var(--bad)}
+  .panel.good ol li::before{color:var(--good)}
+
+  .fit-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+  @media(max-width:720px){.fit-grid{grid-template-columns:1fr}}
+  .fit h3{font-size:16px;font-weight:650;margin-bottom:12px}
+  .fit p{font-size:14.5px;color:#3c3f45}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+  .chip{font-size:13px;padding:6px 12px;background:var(--good-soft);color:var(--good);border-radius:999px;font-weight:500}
+  .chip.warn{background:var(--bad-soft);color:var(--bad)}
+  .keys{list-style:none;margin-top:8px}
+  .keys li{font-size:14.5px;padding:10px 0 10px 30px;position:relative;border-top:1px solid var(--line);color:#33363c}
+  .keys li:first-child{border-top:none}
+  .keys li::before{
+    content:"→";position:absolute;left:0;top:9px;color:var(--accent);font-weight:700
+  }
+  .keys li b{color:var(--ink);font-weight:600}
+
+  .final{margin:64px 0 0;padding:44px 40px;background:var(--ink);color:#f4f3f0;border-radius:var(--radius)}
+  .final .sec-label{color:#9a9da4}
+  .final blockquote{font-size:clamp(19px,2.6vw,25px);font-weight:550;line-height:1.45;letter-spacing:-0.01em;max-width:780px}
+  .final blockquote em{color:#b9d68e;font-style:normal}
+
+  footer{margin-top:56px;padding:28px 0 64px;border-top:1px solid var(--line);font-size:13px;color:var(--muted)}
+  footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
+</style>
+  <link rel="stylesheet" href="tims-theme.css">
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <span class="kicker">Соционика · Модель А</span>
+    <h1>ШТИРЛИЦ</h1>
+    <p class="subtitle">Логико-сенсорный экстраверт. Полный разбор сильных и слабых сторон социотипа по всем восьми функциям Модели А.</p>
+    <div class="tags">
+      <span class="tag"><b>ЛСЭ</b> · ESTj</span>
+      <span class="tag">псевдоним — <b>«Администратор»</b></span>
+      <span class="tag">Квадра <b>Дельта</b></span>
+      <span class="tag">экстраверт · логик · сенсорик · <b>рационал</b></span>
+      <span class="tag">Дуал — <b>Достоевский (EII)</b></span>
+      <span class="tag">Эго: <b>ЧЛ + БС</b></span>
+    </div>
+  </div>
+</header>
+
+<nav>
+  <div class="wrap">
+    <a href="#model">Модель</a>
+    <a href="#ego">Эго</a>
+    <a href="#superego">Супер-Эго</a>
+    <a href="#superid">Супер-Ид</a>
+    <a href="#id">Ид</a>
+    <a href="#summary">Портрет</a>
+    <a href="#fit">Применение</a>
+  </div>
+</nav>
+
+<section id="model">
+  <div class="wrap">
+    <div class="sec-label">Раскладка функций</div>
+    <h2>Модель А Штирлиц</h2>
+    <table>
+      <thead>
+        <tr><th>№</th><th>Функция</th><th>Аспект</th><th>Мерность</th><th>Кольцо</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="num">1</td><td class="fn-name">Базовая</td><td>ЧЛ — деловая логика</td><td><span class="dim d4">4D</span></td><td>ментальное</td></tr>
+        <tr><td class="num">2</td><td class="fn-name">Творческая</td><td>БС — сенсорика ощущений</td><td><span class="dim d3">3D</span></td><td>ментальное</td></tr>
+        <tr><td class="num">3</td><td class="fn-name">Ролевая</td><td>ЧЭ — этика эмоций</td><td><span class="dim d2">2D</span></td><td>ментальное</td></tr>
+        <tr><td class="num">4</td><td class="fn-name">Болевая</td><td>БИ — интуиция времени</td><td><span class="dim d1">1D</span></td><td>ментальное</td></tr>
+        <tr><td class="num">5</td><td class="fn-name">Суггестивная</td><td>БЭ — этика отношений</td><td><span class="dim d1">1D</span></td><td>витальное</td></tr>
+        <tr><td class="num">6</td><td class="fn-name">Активационная</td><td>ЧИ — интуиция возможностей</td><td><span class="dim d2">2D</span></td><td>витальное</td></tr>
+        <tr><td class="num">7</td><td class="fn-name">Ограничительная</td><td>БЛ — структурная логика</td><td><span class="dim d3">3D</span></td><td>витальное</td></tr>
+        <tr><td class="num">8</td><td class="fn-name">Фоновая</td><td>ЧС — волевая сенсорика</td><td><span class="dim d4">4D</span></td><td>витальное</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section id="ego">
+  <div class="wrap">
+    <div class="sec-label">Этаж 1 · Зона силы</div>
+    <h2>Блок «ЭГО»</h2>
+
+    <div class="floor">
+      <div class="floor-head"><h3>1-я базовая — ЧЛ, деловая логика</h3><span class="dim d4">4D</span></div>
+      <div class="floor-sub">опыт + нормы + ситуация + время · «встроенный фильтр реальности»</div>
+      <p class="floor-desc">Высшее мастерство: живёт по внутреннему закону пользы. Он не рассуждает об эффективности — он её видит и обеспечивает повсюду.</p>
+      <div class="cols">
+        <div class="col plus">
+          <h4><span class="dot"></span>Сильные стороны</h4>
+          <ul>
+            <li><b>Машина эффективности высшего класса:</b> любое дело — наладить, посчитать, сделать качественно</li>
+            <li><b>Технологическое мышление:</b> понимает, как устроено и как починить что угодно</li>
+            <li><b>Зона абсолютной уверенности:</b> польза, качество, целесообразность</li>
+            <li><b>Работоспособность и дисциплина,</b> доведение всего до результата</li>
+            <li><b>Практическая эрудиция:</b> инструкции, нормы, стандарты — родная стихия</li>
+          </ul>
+        </div>
+        <div class="col minus">
+          <h4><span class="dot"></span>Теневые стороны</h4>
+          <ul>
+            <li><b>Занудство деталями</b> и критика чужой неэффективности вслух</li>
+            <li><b>Трудоголизм:</b> работа вытесняет всё остальное</li>
+            <li>Пользу меряет своей шкалой — чужие «бесполезные» интересы обесценивает</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="floor">
+      <div class="floor-head"><h3>2-я творческая — БС, сенсорика ощущений</h3><span class="dim d3">3D</span></div>
+      <div class="floor-sub">опыт + нормы + ситуация · то, «как он решает задачи» и главный продукт для окружающих</div>
+      <p class="floor-desc">Инструмент обслуживания базовой ЧЛ: способом действия Штирлица является забота — удобство и комфорт вокруг процесса работы.</p>
+      <div class="cols">
+        <div class="col plus">
+          <h4><span class="dot"></span>Сильные стороны</h4>
+          <ul>
+            <li><b>Обустраивает пространство и быт:</b> эргономика, порядок, снабжение — всё продумано</li>
+            <li><b>Заботится делом о самочувствии близких:</b> накормит, вылечит, утеплит</li>
+            <li><b>Продукт для окружающих:</b> физический комфорт и надёжный уклад жизни</li>
+            <li>Тонко различает качество материалов, еды, обстановки</li>
+          </ul>
+        </div>
+        <div class="col minus">
+          <h4><span class="dot"></span>Ограничения</h4>
+          <ul>
+            <li><b>Гиперопека:</b> опекает даже тех, кто не просил</li>
+            <li><b>Суетливость в мелочах быта,</b> ворчание по поводу порядка</li>
+            <li>Комфортом заменяет разговор о чувствах</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="superego">
+  <div class="wrap">
+    <div class="sec-label">Этаж 2 · Костюм и боль</div>
+    <h2>Блок «СУПЕР-ЭГО»</h2>
+
+    <div class="floor">
+      <div class="floor-head"><h3>3-я ролевая — ЧЭ, этика эмоций</h3><span class="dim d2">2D</span></div>
+      <div class="floor-sub">опыт + социальные нормы · «шаг вправо, шаг влево — тупик»</div>
+      <div class="cols" style="margin-top:16px">
+        <div class="col plus">
+          <h4><span class="dot"></span>Что умеет</h4>
+          <ul>
+            <li>Изобразить оживлённого общительного человека: улыбка, шутка, любезность по протоколу</li>
+            <li>Поддержать светскую беседу и праздничное настроение</li>
+            <li>Выдержать публичные эмоции 15–30 минут</li>
+          </ul>
+        </div>
+        <div class="col minus">
+          <h4><span class="dot"></span>Слабости</h4>
+          <ul>
+            <li><b>Маска весельчака сползает быстро:</b> фальшь чувствуется всем</li>
+            <li><b>Только по нормам:</b> свои чувства выразить не может</li>
+            <li>Долгое эмоциональное взаимодействие истощает, вызывает раздражение</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="floor">
+      <div class="floor-head"><h3>4-я болевая — БИ, интуиция времени</h3><span class="dim d1">1D</span></div>
+      <div class="floor-sub">только личный опыт · Ахиллесова пята и главный источник стресса</div>
+      <p class="floor-desc">Слепота ко времени: не чувствует своевременности, боится будущего и не успевает жить.</p>
+      <div class="cols">
+        <div class="col minus" style="grid-column:1/-1">
+          <h4><span class="dot"></span>Конкретные проявления</h4>
+          <ul>
+            <li><b>Тревога о будущем:</b> «а что потом?» — вопрос без ответа</li>
+            <li><b>Не видит момента:</b> упускает нужный момент, живёт вчерашними нормами</li>
+            <li><b>Дедлайны и перемены срока</b> вызывают панику и злость</li>
+            <li><b>Гиперкомпенсация:</b> лихорадочные списки планов и графиков, которые сам же срывает; море нервов впустую</li>
+            <li>Упрёк «ты живёшь только работой, жизнь проходит» бьёт под дых и помнится годами</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="superid">
+  <div class="wrap">
+    <div class="sec-label">Этаж 3 · Внутренний ребёнок</div>
+    <h2>Блок «СУПЕР-ИД»</h2>
+
+    <div class="floor">
+      <div class="floor-head"><h3>5-я суггестивная — БЭ, этика отношений</h3><span class="dim d1">1D</span></div>
+      <div class="floor-sub">«покормите меня» · зона максимального внушения</div>
+      <div class="cols" style="margin-top:16px">
+        <div class="col plus">
+          <h4><span class="dot"></span>Чего жаждет</h4>
+          <ul>
+            <li>Ясного личного отношения: чтобы сказали прямо, кого любят и кого нет</li>
+            <li>Тепла, признательности, моральной поддержки</li>
+            <li>Глубоко этичного человека рядом (это даёт дуал Достоевский)</li>
+          </ul>
+        </div>
+        <div class="col minus">
+          <h4><span class="dot"></span>Риски</h4>
+          <ul>
+            <li><b>Сам не разбирается в отношениях:</b> не понимает, друг или использует</li>
+            <li><b>Уязвим для лести и тёплого тона:</b> верит тому, кто «хорошо относится»</li>
+            <li>Держится за людей из чувства долга, даже когда те вредят</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="floor">
+      <div class="floor-head"><h3>6-я активационная — ЧИ, интуиция возможностей</h3><span class="dim d2">2D</span></div>
+      <div class="floor-sub">«подзарядный кабель» · зона искренней радости</div>
+      <div class="cols" style="margin-top:16px">
+        <div class="col plus">
+          <h4><span class="dot"></span>Что заряжает</h4>
+          <ul>
+            <li>Новые идеи, неожиданные варианты и перспективы</li>
+            <li><b>Расцветает, когда кто-то открывает ему возможности</b>: «а вот так можно!»</li>
+            <li>Оживляется в обсуждении новшеств и необычных решений</li>
+          </ul>
+        </div>
+        <div class="col minus">
+          <h4><span class="dot"></span>Особенности</h4>
+          <ul>
+            <li>Сам вариантов почти не генерит (2D): хватает готовые по нормам</li>
+            <li>Верит любой уверенно поданной «перспективе»</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="id">
+  <div class="wrap">
+    <div class="sec-label">Этаж 4 · Автопилот</div>
+    <h2>Блок «ИД»</h2>
+
+    <div class="floor">
+      <div class="floor-head"><h3>7-я ограничительная — БЛ, структурная логика</h3><span class="dim d3">3D</span></div>
+      <div class="floor-sub">стоп-кран · защищает базовую функцию</div>
+      <div class="cols" style="margin-top:16px">
+        <div class="col plus">
+          <h4><span class="dot"></span>Как работает</h4>
+          <ul>
+            <li>Отбрасывает пустые теории коротким: <b>«это несерьёзно, не работает»</b></li>
+            <li>Игнорирует абстрактные схемы без практического выхода</li>
+            <li>Защищает дело от бюрократии и умствований</li>
+          </ul>
+        </div>
+        <div class="col minus">
+          <h4><span class="dot"></span>Оборотная сторона</h4>
+          <ul>
+            <li><b>Недоверие к стройным системам:</b> может отвергнуть полезную методику</li>
+            <li>Упускает решения, где нужен именно теоретический прорыв</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="floor">
+      <div class="floor-head"><h3>8-я фоновая — ЧС, волевая сенсорика</h3><span class="dim d4">4D</span></div>
+      <div class="floor-sub">скрытый мастер · самая сильная подсознательная функция</div>
+      <div class="cols" style="margin-top:16px">
+        <div class="col plus" style="grid-column:1/-1">
+          <h4><span class="dot"></span>Что делает молча</h4>
+          <ul>
+            <li><b>Между делом держит власть и порядок:</b> дисциплина в его зоне наступает сама, без приказов</li>
+            <li>Спокойная твёрдость: давить на него бесполезно, он просто не замечает давления</li>
+            <li>Следит за территорией, ресурсами и безопасностью — незаметно и безупречно</li>
+            <li>Люди удивляются, почему возле него никто не буянит</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="summary">
+  <div class="wrap">
+    <div class="sec-label">Итоговый портрет</div>
+    <h2>Сильные и слабые стороны</h2>
+    <div class="grid2">
+      <div class="panel good">
+        <h3><span class="dot"></span>Сильные стороны</h3>
+        <ol>
+          <li><b>Эффективность высшего класса</b> (ЧЛ 4D): наладит, посчитает, доведёт до результата</li>
+          <li><b>Мастерство комфорта</b> (БС 3D): обустройство быта и забота делом</li>
+          <li><b>Скрытая сила</b> (ЧС 4D): спокойная неподавляемость и порядок вокруг</li>
+          <li><b>Железная дисциплина</b> и работоспособность</li>
+          <li><b>Техническая и нормативная эрудиция</b></li>
+          <li><b>Надёжность:</b> данное слово и стандарт качества нерушимы</li>
+          <li><b>Практичная забота о близких</b> без пафоса</li>
+          <li><b>Разборчивость в схемах</b> (БЛ ограничительная): пустоту отсеивает мгновенно</li>
+        </ol>
+      </div>
+      <div class="panel bad">
+        <h3><span class="dot"></span>Слабые стороны</h3>
+        <ol>
+          <li><b>Болевая БИ:</b> страх будущего, нечувствительность к моменту, паника от переносов сроков</li>
+          <li><b>Ролевая эмоциональность</b> (ЧЭ 2D): маска фальшива, долгие чувства истощают</li>
+          <li><b>Внушаемость тёплым отношением</b> (БЭ 1D): лесть и ласковый тон обезоруживают</li>
+          <li><b>Мало собственных идей</b> (ЧИ акт): зависит от внешних генераторов</li>
+          <li><b>Трудоголизм</b> в ущерб отношениям и отдыху</li>
+          <li><b>Критичность и брюзжание,</b> ранящие домашних</li>
+          <li><b>Негибкость привычек</b> и уклада</li>
+          <li><b>Не умеет просить и принимать помощь</b> некомпетентных — раздражается</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="fit">
+  <div class="wrap">
+    <div class="sec-label">Практический слой</div>
+    <h2>Где раскрывается · Ключи к взаимодействию</h2>
+    <div class="fit-grid">
+      <div class="panel fit">
+        <h3>Раскрывается</h3>
+        <p>Там, где платят за порядок, качество и работающую систему.</p>
+        <div class="chips">
+          <span class="chip">производство и инженерия</span>
+          <span class="chip">контроль качества</span>
+          <span class="chip">логистика и снабжение</span>
+          <span class="chip">администрирование</span>
+          <span class="chip">медицина (организация помощи)</span>
+          <span class="chip">стройка и эксплуатация</span>
+          <span class="chip">АХО и эксплуатация</span>
+          <span class="chip">сервис и стандартизация</span>
+        </div>
+      </div>
+      <div class="panel fit">
+        <h3>Ломается</h3>
+        <p>В ролях с постоянными переменами курса, публичной импровизацией и эмоциональным лидерством.</p>
+        <div class="chips">
+          <span class="chip warn">стартапы без правил</span>
+          <span class="chip warn">роль «души компании»</span>
+          <span class="chip warn">частые реорганизации</span>
+          <span class="chip warn">работа без ясных сроков и KPI</span>
+        </div>
+      </div>
+    </div>
+    <div class="panel" style="margin-top:20px">
+      <h3 style="color:var(--ink)">Ключи к взаимодействию</h3>
+      <ul class="keys">
+        <li><b>Не бить по болевой БИ:</b> никаких внезапных переносов и тумана в планах — давайте ясные сроки и предупреждайте заранее</li>
+        <li><b>Приносить тепло и прямое отношение</b> — питание суггестивной БЭ: говорите прямо, кого и за что цените</li>
+        <li><b>Делиться идеями и возможностями</b> (6-я ЧИ): «а вот так можно» его заряжает</li>
+        <li><b>Идеальная связка — дуальность с Достоевским (EII):</b> тот своей базовой БЭ закрывает его суггестивную, а творческой ЧИ — активационную; Штирлиц взамен даёт эффективность (его суггестивную ЧЛ) и комфорт (его активационную БС)</li>
+      </ul>
+    </div>
+
+    <div class="final">
+      <div class="sec-label">Суть одной фразой</div>
+      <blockquote>Человек дела, который наладит, обеспечит и <em>незаметно защитит</em> — но нуждается в том, кто скажет ему <em>«я рядом и я тебя ценю»</em>, и покажет, что впереди светло.</blockquote>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>Социотип «Штирлиц» (ЛСЭ) · анализ по Модели А Аушры Аугустинавичюте</span>
+    <span>Мерности функций — Ирина Ермак</span>
+  </div>
+</footer>
+
+</body>
+</html>
