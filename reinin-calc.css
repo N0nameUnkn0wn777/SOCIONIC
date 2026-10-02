@@ -1,0 +1,438 @@
+/* Калькулятор признаков Рейнина.
+   Стили изолированы в контейнере .reinin-calc, чтобы не затрагивать
+   оформление сайта «Дело № 16». Производная от reininCALC/css/styles.css:
+   все селекторы ограничены этим контейнером, переменные переопределены
+   на уровне .reinin-calc вместо :root. */
+
+.reinin-calc {
+  --bg: #f4f5f7;
+  --surface: #ffffff;
+  --surface-alt: #fafbfc;
+  --border: #dfe3e8;
+  --border-strong: #c4cad2;
+  --text: #1c2430;
+  --text-muted: #6b7683;
+  --accent: #2f6f9f;
+  --accent-soft: #eaf2f8;
+  --accent-strong: #24587f;
+  --warn: #a8632a;
+  --warn-soft: #fdf3e7;
+  --radius: 8px;
+  --shadow: 0 1px 2px rgba(28, 36, 48, 0.06), 0 4px 12px rgba(28, 36, 48, 0.05);
+
+  background: var(--bg);
+  color: var(--text);
+  font: 15px/1.55 "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px 20px 28px;
+}
+
+/* ---------- шапка ---------- */
+
+.reinin-calc .page-header {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 0 20px;
+}
+
+.reinin-calc .page-header h1 {
+  margin: 0 0 8px;
+  font-size: 26px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.reinin-calc .lead {
+  margin: 0;
+  max-width: 720px;
+  color: var(--text-muted);
+}
+
+/* ---------- вкладки ---------- */
+
+.reinin-calc .tabs {
+  display: flex;
+  gap: 4px;
+  max-width: 1200px;
+  margin: 0 auto 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.reinin-calc .tab {
+  appearance: none;
+  border: 0;
+  background: none;
+  padding: 10px 16px;
+  font: inherit;
+  color: var(--text-muted);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+}
+
+.reinin-calc .tab:hover { color: var(--text); }
+
+.reinin-calc .tab.is-active {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+  font-weight: 600;
+}
+
+/* ---------- карточки и сетка ---------- */
+
+.reinin-calc .panel { display: none; }
+.reinin-calc .panel.is-active { display: block; }
+
+.reinin-calc .layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  align-items: start;
+}
+
+.reinin-calc .layout-relations { margin-bottom: 20px; }
+
+.reinin-calc .card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 18px 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.reinin-calc .card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+
+.reinin-calc .card-head h2 {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 600;
+}
+
+.reinin-calc .info {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.reinin-calc .chip {
+  display: inline-block;
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent-strong);
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.reinin-calc .chip-warn {
+  background: var(--warn-soft);
+  color: var(--warn);
+}
+
+.reinin-calc .btn {
+  appearance: none;
+  border: 1px solid var(--border-strong);
+  background: var(--surface);
+  color: var(--text-muted);
+  font: inherit;
+  font-size: 13px;
+  padding: 5px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.reinin-calc .btn:hover {
+  color: var(--text);
+  border-color: var(--accent);
+}
+
+.reinin-calc .note {
+  margin: 0 0 14px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.reinin-calc .hint {
+  margin: 14px 0 0;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+/* ---------- дихотомии ---------- */
+
+.reinin-calc .dichotomy {
+  padding: 12px 0;
+  border-top: 1px solid var(--border);
+}
+
+.reinin-calc .dichotomy:first-child { border-top: 0; padding-top: 0; }
+
+.reinin-calc .dichotomy-labels {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 2px;
+}
+
+.reinin-calc .pole {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  font-size: 14px;
+  color: var(--text-muted);
+  transition: color 0.12s;
+}
+
+.reinin-calc .pole-right { flex-direction: row; }
+
+.reinin-calc .pole-name { font-weight: 500; }
+
+.reinin-calc .pole-mark {
+  font-variant-numeric: tabular-nums;
+  font-size: 12px;
+  color: var(--border-strong);
+  min-width: 34px;
+}
+
+.reinin-calc .pole-left .pole-mark { text-align: right; }
+.reinin-calc .pole.is-active { color: var(--accent); }
+.reinin-calc .pole.is-active .pole-mark { color: var(--accent); font-weight: 600; }
+
+.reinin-calc .scale {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: var(--border-strong);
+  margin-bottom: 2px;
+}
+
+.reinin-calc .slider {
+  width: 100%;
+  margin: 4px 0 6px;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+
+.reinin-calc .dichotomy-hint {
+  font-size: 12px;
+  line-height: 1.45;
+  color: var(--text-muted);
+  opacity: 0.85;
+}
+
+/* ---------- профиль ---------- */
+
+.reinin-calc .profile {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 8px 14px;
+  margin-bottom: 16px;
+  padding: 12px;
+  background: var(--surface-alt);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+}
+
+.reinin-calc .profile-cell { min-width: 0; }
+
+.reinin-calc .profile-name {
+  display: block;
+  font-size: 12px;
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.reinin-calc .profile-track {
+  position: relative;
+  height: 4px;
+  margin-top: 4px;
+  background: var(--border);
+  border-radius: 2px;
+}
+
+.reinin-calc .profile-dot {
+  position: absolute;
+  top: -3px;
+  width: 10px;
+  height: 10px;
+  margin-left: -5px;
+  border-radius: 50%;
+  background: var(--border-strong);
+  transition: left 0.12s;
+}
+
+.reinin-calc .profile-dot.is-set { background: var(--accent); }
+
+/* ---------- таблицы ---------- */
+
+.reinin-calc .results {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.reinin-calc .results th {
+  text-align: left;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--text-muted);
+  padding: 0 8px 8px;
+  border-bottom: 1px solid var(--border-strong);
+}
+
+.reinin-calc .results td {
+  padding: 7px 8px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: middle;
+}
+
+.reinin-calc .results tbody tr:hover { background: var(--surface-alt); }
+
+.reinin-calc .results tr.is-top { background: var(--accent-soft); }
+.reinin-calc .results tr.is-top:hover { background: var(--accent-soft); }
+
+.reinin-calc .col-rank {
+  width: 32px;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.reinin-calc .col-mbti {
+  width: 60px;
+  font-family: Consolas, "SF Mono", Menlo, monospace;
+  font-size: 13px;
+}
+
+.reinin-calc .type-name {
+  appearance: none;
+  border: 0;
+  background: none;
+  padding: 0;
+  font: inherit;
+  font-weight: 600;
+  color: var(--accent);
+  cursor: pointer;
+  text-align: left;
+}
+
+.reinin-calc .type-name:hover { text-decoration: underline; }
+
+.reinin-calc .type-jung { color: var(--text-muted); }
+
+.reinin-calc .rel-name { font-weight: 600; }
+
+.reinin-calc .col-prob { width: 190px; }
+
+.reinin-calc .bar {
+  position: relative;
+  height: 8px;
+  background: var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.reinin-calc .bar-fill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 4px;
+  transition: width 0.15s;
+}
+
+.reinin-calc .bar-value {
+  display: block;
+  margin-top: 2px;
+  font-size: 12px;
+  color: var(--text-muted);
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- лучший ТИМ в режиме отношений ---------- */
+
+.reinin-calc .best {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+  padding: 10px 12px;
+  background: var(--surface-alt);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+}
+
+.reinin-calc .best-label { font-size: 13px; color: var(--text-muted); }
+.reinin-calc .best-name { font-weight: 600; }
+.reinin-calc .best-mbti {
+  font-family: Consolas, "SF Mono", Menlo, monospace;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+.reinin-calc .best-prob {
+  margin-left: auto;
+  color: var(--accent);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- текст методики ---------- */
+
+.reinin-calc .prose h2 { margin: 0 0 14px; font-size: 20px; }
+.reinin-calc .prose h3 { margin: 26px 0 10px; font-size: 16px; }
+.reinin-calc .prose p { margin: 0 0 12px; color: var(--text-muted); }
+.reinin-calc .prose em { font-style: italic; }
+
+.reinin-calc .formula {
+  padding: 10px 14px;
+  background: var(--surface-alt);
+  border-left: 3px solid var(--accent);
+  border-radius: 0 4px 4px 0;
+  font-family: Cambria, Georgia, serif;
+  font-size: 15px;
+  color: var(--accent-strong);
+  overflow-x: auto;
+}
+
+/* ---------- подвал ---------- */
+
+.reinin-calc .page-footer {
+  max-width: 1200px;
+  margin: 28px auto 0;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+/* ---------- адаптивность ---------- */
+
+@media (max-width: 900px) {
+  .reinin-calc .layout { grid-template-columns: minmax(0, 1fr); }
+  .reinin-calc .col-prob { width: 130px; }
+  .reinin-calc .type-jung { display: none; }
+}
+
+@media (max-width: 560px) {
+  .reinin-calc { padding: 16px 12px 20px; }
+  .reinin-calc .page-header { padding: 16px 0 12px; }
+  .reinin-calc .page-header h1 { font-size: 21px; }
+  .reinin-calc .card { padding: 14px; }
+  .reinin-calc .col-mbti { display: none; }
+  .reinin-calc .best-prob { margin-left: 0; }
+}

@@ -7,6 +7,7 @@
   <title>Признаки Рейнина — пятнадцать парных признаков типа · Дело № 16</title>
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="guide.css">
+  <link rel="stylesheet" href="reinin-calc.css">
 </head>
 <body>
   <header class="topbar">
@@ -423,6 +424,198 @@
         </ul>
       </div>
     </section>
+
+    <section class="tp-section" style="border-top:1px solid var(--line);border-bottom:none">
+      <div class="container">
+        <div class="section-head"><span class="num">16</span><div><h2>Калькулятор признаков Рейнина</h2><p>Практический инструмент: определите свой ТИМ по 15 признакам байесовским методом и посчитайте, кем является партнёр по отношению к вам.</p></div></div>
+        <div class="reinin-calc">
+          <header class="page-header">
+            <h1>Калькулятор признаков Реинина</h1>
+            <p class="lead">
+              Определение типа информационного метаболизма (ТИМа) по 15 признакам
+              байесовским методом. Перетащите ползунок к тому полюсу, который вам свойственен.
+            </p>
+          </header>
+
+          <nav class="tabs" role="tablist">
+            <button class="tab is-active" data-tab="single" role="tab" aria-selected="true">Определение ТИМа</button>
+            <button class="tab" data-tab="relations" role="tab" aria-selected="false">Отношения</button>
+            <button class="tab" data-tab="method" role="tab" aria-selected="false">О методике</button>
+          </nav>
+
+          <section class="panel is-active" id="panel-single">
+            <div class="layout">
+              <div class="card card-input">
+                <div class="card-head">
+                  <h2>Ваши признаки</h2>
+                  <button class="btn btn-ghost" data-action="reset-single">Сбросить</button>
+                </div>
+                <div id="single-sliders"></div>
+              </div>
+
+              <div class="card card-result">
+                <div class="card-head">
+                  <h2>Вероятности ТИМов</h2>
+                  <span class="info" id="single-info"></span>
+                </div>
+                <div id="single-profile" class="profile"></div>
+                <table class="results">
+                  <thead>
+                    <tr>
+                      <th class="col-rank">#</th>
+                      <th>ТИМ</th>
+                      <th>Тип по Юнгу</th>
+                      <th class="col-mbti">MBTI</th>
+                      <th class="col-prob">Вероятность</th>
+                    </tr>
+                  </thead>
+                  <tbody id="single-results"></tbody>
+                </table>
+                <p class="hint">
+                  Нажмите на название ТИМа, чтобы выставить все ползунки строго по его профилю.
+                </p>
+              </div>
+            </div>
+          </section>
+
+          <section class="panel" id="panel-relations">
+            <div class="layout layout-relations">
+              <div class="card card-input">
+                <div class="card-head">
+                  <h2>Ваш выбор</h2>
+                  <button class="btn btn-ghost" data-action="reset-yours">Сбросить</button>
+                </div>
+                <div class="best" id="relations-best-yours"></div>
+                <div id="relations-sliders-yours"></div>
+              </div>
+
+              <div class="card card-input">
+                <div class="card-head">
+                  <h2>Выбор партнёра</h2>
+                  <button class="btn btn-ghost" data-action="reset-partner">Сбросить</button>
+                </div>
+                <div class="best" id="relations-best-partner"></div>
+                <div id="relations-sliders-partner"></div>
+              </div>
+            </div>
+
+            <div class="card card-result">
+              <div class="card-head">
+                <h2>Отношения: кем партнёр является по отношению к Вам</h2>
+                <span class="info" id="relations-info"></span>
+              </div>
+              <p class="note">
+                Отношение вычисляется как вероятностная сумма по всем 16&nbsp;×&nbsp;16 парам ТИМов.
+                Отношение несимметрично: «кем является партнёр по отношению к Вам».
+              </p>
+              <table class="results">
+                <thead>
+                  <tr>
+                    <th class="col-rank">#</th>
+                    <th>Отношение</th>
+                    <th>Кто является этим отношением</th>
+                    <th class="col-mbti">MBTI</th>
+                    <th class="col-prob">Вероятность</th>
+                  </tr>
+                </thead>
+                <tbody id="relations-results"></tbody>
+              </table>
+            </div>
+          </section>
+
+          <section class="panel" id="panel-method">
+            <div class="card prose">
+              <h2>Методика расчёта</h2>
+
+              <p>
+                Тип информационного метаболизма определяется по 15 дихотомиям. Каждый ответ
+                <em>s<sub>i</sub></em> — число от −1 до +1. Если у двух признаков нет
+                предпочтения, ответ ставится 0 (по условию методики таких признаков
+                допускается не более двух из пятнадцати).
+              </p>
+
+              <p>
+                Каждому ТИМу <em>t</em> соответствует вектор
+                <em>s<sub>1,t</sub></em>, …, <em>s<sub>15,t</sub></em>, где каждая координата
+                равна −1 или +1. Правдоподобие наблюдённого ответа при данном ТИМе равно
+                произведению независимых плотностей:
+              </p>
+
+              <p class="formula">
+                f(s<sub>1</sub>, …, s<sub>15</sub> | t) =
+                r<sub>1,t</sub>(s<sub>1</sub>) · … · r<sub>15,t</sub>(s<sub>15</sub>)
+              </p>
+
+              <p>где плотность отдельного признака линейна по ответу:</p>
+
+              <p class="formula">
+                r<sub>i,t</sub>(s) = (4/9) · s<sub>i,t</sub> · s + 1/2
+              </p>
+
+              <p>
+                Плотность лежит в интервале от 1/2&nbsp;−&nbsp;4/9 до
+                1/2&nbsp;+&nbsp;4/9, то есть всегда положительна: даже полностью
+                ошибочный ответ даёт осмысленную (хотя и малую) вероятность.
+                При нулевом ответе плотность равна 1/2 у всех ТИМов, поэтому все ползунки
+                в середине дают равномерное распределение по 1/16.
+              </p>
+
+              <p>
+                Априорные вероятности всех ТИМов равны: P(t) = 1/16. По формуле Байеса
+                нормированный результат:
+              </p>
+
+              <p class="formula">
+                P(t* | s<sub>1</sub>, …, s<sub>15</sub>) =
+                f(s<sub>1</sub>, …, s<sub>15</sub> | t*) /
+                Σ<sub>t</sub> f(s<sub>1</sub>, …, s<sub>15</sub> | t)
+              </p>
+
+              <p>
+                Все 15 признаков образуют ортогональную матрицу 15&nbsp;×&nbsp;16
+                (строки — признаки, столбцы — ТИМы, элементы ±1). Это проверено: скалярное
+                произведение любых двух различных строк равно нулю. Такая ортогональность
+                означает, что признаки взаимно независимы и вносят равный вклад.
+              </p>
+
+              <h3>Отношения между ТИМами</h3>
+              <p>
+                Каждому ТИМу ставится в соответствие матрица 3&nbsp;×&nbsp;3 из 0 и ±1,
+                действующая на кубе (Z/2Z)³. Отношение вычисляется как
+                F(A, B) = M<sub>B</sub> · M<sub>A</sub><sup>T</sup>.
+                Так как все матрицы ортогональны (M·M<sup>T</sup> = I), отношение ТИМа к
+                самому себе всегда даёт тождик.
+              </p>
+              <p>
+                Отношение несимметрично: F(A, B) — это «кем B является по отношению к A».
+                Из 256 упорядоченных пар 64 дают разный результат при перестановке — например,
+                Дон Кихот по отношению к Гамлету — подзаказный, а Гамлет по отношению к
+                Дону Кихоту — заказчик.
+              </p>
+              <p>
+                Замечание: в тексте методики множество из 16 типов описано как изоморфное
+                (Z/2Z)⁴. Матрицы же, поставляемые вместе с методом, образуют неабелеву
+                группу порядка 16, в которой четыре элемента (Гамлет, Максим, Штирлиц,
+                Достоевский) имеют порядок 4. Расхождение затрагивает только описание
+                группы; сами вычисления и таблица отношений воспроизводят источник
+                без изменений и совпадают с таблицей отношений соционики.
+              </p>
+
+              <h3>Источник</h3>
+              <p class="note">
+                Методика и справочные данные: reinin.ru, «Проблемы и решения признаков Реинина».
+                Калькулятор является независимой реализацией этой методики.
+              </p>
+            </div>
+          </section>
+
+          <footer class="page-footer">
+            Независимая реализация методики Реинина. Не является научным или медицинским
+            заключением.
+          </footer>
+        </div>
+      </div>
+    </section>
     <div class="container">
       <div class="pager">
         <a href="interactions.html"><div class="dir">← Глава IV · Связи</div><div class="t">Взаимодействие между типами</div></a>
@@ -436,5 +629,8 @@
       <p>Архивное дело № 16 «Социон». Признаки Рейнина — дополнительные парные признаки типа, производные от базиса Юнга. Материалы носят справочный характер и основаны на классической модели А. Единица хранения: открытый доступ.</p>
     </div>
   </footer>
+  <script src="reininCALC/js/data.js"></script>
+  <script src="reininCALC/js/engine.js"></script>
+  <script src="reininCALC/js/app.js"></script>
 </body>
 </html>
